@@ -1,4 +1,3 @@
-# %%
 import os, sys
 sys.path.append(os.getcwd())
 
@@ -16,7 +15,6 @@ import tflib as lib
 import tflib.ops.linear
 import tflib.plot
 
-# %%
 MODE = 'wgan-gp' # wgan or wgan-gp
 DATASET = '8gaussians' # 8gaussians, 25gaussians, swissroll
 DIM = 512 # Model dimensionality
@@ -29,7 +27,7 @@ BATCH_SIZE = 256 # Batch size
 ITERS = 100000 # how many generator iterations to train for
 
 lib.print_model_settings(locals().copy())
-# %%
+
 def ReLULayer(name, n_in, n_out, inputs):
     output = lib.ops.linear.Linear(
         name+'.Linear',
@@ -58,7 +56,7 @@ def Discriminator(inputs):
     output = ReLULayer('Discriminator.3', DIM, DIM, output)
     output = lib.ops.linear.Linear('Discriminator.4', DIM, 1, output)
     return tf.reshape(output, [-1])
-# %%
+
 real_data = tf.placeholder(tf.float32, shape=[None, 2])
 fake_data = Generator(BATCH_SIZE, real_data)
 
@@ -68,7 +66,7 @@ disc_fake = Discriminator(fake_data)
 # WGAN loss
 disc_cost = tf.reduce_mean(disc_fake) - tf.reduce_mean(disc_real)
 gen_cost = -tf.reduce_mean(disc_fake)
-# %%
+
 # WGAN gradient penalty
 if MODE == 'wgan-gp':
     alpha = tf.random_uniform(

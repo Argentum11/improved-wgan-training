@@ -1,5 +1,5 @@
 """WGAN-GP ResNet for CIFAR-10"""
-# %%
+
 import os, sys
 sys.path.append(os.getcwd())
 
@@ -21,7 +21,7 @@ import time
 import functools
 import locale
 locale.setlocale(locale.LC_ALL, '')
-# %%
+
 # Download CIFAR-10 (Python version) at
 # https://www.cs.toronto.edu/~kriz/cifar.html and fill in the path to the
 # extracted files here!

@@ -1,4 +1,3 @@
-# %%
 import os, sys
 sys.path.append(os.getcwd())
 
@@ -21,7 +20,6 @@ import tflib.mnist
 import tflib.plot
 tf.compat.v1.disable_eager_execution()
 
-# %%
 MODE = 'wgan-gp' # dcgan, wgan, or wgan-gp
 DIM = 64 # Model dimensionality
 BATCH_SIZE = 50 # Batch size
@@ -103,7 +101,6 @@ def Discriminator(inputs):
 
     return tf.reshape(output, [-1])
 
-# %%
 real_data = tf.compat.v1.placeholder(tf.float32, shape=[BATCH_SIZE, OUTPUT_DIM])
 fake_data = Generator(BATCH_SIZE)
 
@@ -113,7 +110,6 @@ disc_fake = Discriminator(fake_data)
 gen_params = lib.params_with_name('Generator')
 disc_params = lib.params_with_name('Discriminator')
 
-# %%
 if MODE == 'wgan':
     gen_cost = -tf.reduce_mean(disc_fake)
     disc_cost = tf.reduce_mean(disc_fake) - tf.reduce_mean(disc_real)
@@ -203,7 +199,6 @@ def generate_image(frame, true_dist):
         'imgs/samples_{}.png'.format(frame)
     )
 
-# %%
 # Dataset iterator
 train_gen, dev_gen, test_gen = lib.mnist.load(BATCH_SIZE, BATCH_SIZE)
 def inf_train_gen():
@@ -211,11 +206,6 @@ def inf_train_gen():
         for images,targets in train_gen():
             yield images
 
-# %% check out data attributes
-
-# %% add my data instead
-
-# %%
 # Train loop
 with tf.compat.v1.Session() as session:
 
@@ -263,5 +253,3 @@ with tf.compat.v1.Session() as session:
             lib.plot.flush()
 
         lib.plot.tick()
-
-# %%
