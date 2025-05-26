@@ -27,7 +27,7 @@ def Batchnorm(name, axes, inputs, is_training=None, stats_iter=None, update_movi
         moving_variance = lib.param(name+'.moving_variance', np.ones(inputs.get_shape()[1], dtype='float32'), trainable=False)
 
         def _fused_batch_norm_training():
-            return tf.nn.fused_batch_norm(inputs, scale, offset, epsilon=1e-5, data_format='NCHW')
+            return tf.compat.v1.nn.fused_batch_norm(inputs, scale, offset, epsilon=1e-5, data_format='NCHW')
         def _fused_batch_norm_inference():
             # Version which blends in the current item's statistics
             batch_size = tf.cast(tf.shape(inputs)[0], 'float32')
@@ -74,7 +74,7 @@ def Batchnorm(name, axes, inputs, is_training=None, stats_iter=None, update_movi
     else:
         # raise Exception('old BN')
         # TODO we can probably use nn.fused_batch_norm here too for speedup
-        mean, var = tf.nn.moments(inputs, axes, keep_dims=True)
+        mean, var = tf.nn.moments(inputs, axes, keepdims=True)
         shape = mean.get_shape().as_list()
         if 0 not in axes:
             print ("WARNING ({}): didn't find 0 in axes, but not using separate BN params for each item in batch".format(name))

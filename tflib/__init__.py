@@ -27,14 +27,15 @@ def param(name, *args, **kwargs):
         _params[name] = param
     result = _params[name]
     i = 0
-    while result in _param_aliases:
-        # print 'following alias {}: {} to {}'.format(i, result, _param_aliases[result])
+    result_ref = result.ref()
+    while result_ref in _param_aliases:
         i += 1
-        result = _param_aliases[result]
+        result = _param_aliases[result_ref]
+        result_ref = result.ref()
     return result
 
 def params_with_name(name):
-    return [p for n,p in _params.items() if name in n]
+    return [p for n,p in _params.items() if name in n and p.trainable]
 
 def delete_all_params():
     _params.clear()
