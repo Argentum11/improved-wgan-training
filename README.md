@@ -24,3 +24,24 @@ download URL is in the file.
 - `python gan_64x64.py`: 64x64 architectures (this code trains on ImageNet instead of LSUN bedrooms in the paper)
 - `python gan_language.py`: Character-level language model
 - `python gan_cifar.py`: CIFAR-10
+
+## Datasets
+
+### CIFAR-10
+
+To download and set up the CIFAR-10 dataset:
+
+```bash
+# Download the CIFAR-10 dataset
+wget https://www.cs.toronto.edu/\~kriz/cifar-10-python.tar.gz
+
+# Extract the archive
+tar -xvzf cifar-10-python.tar.gz
+
+# Organize the dataset into a directory
+mkdir -p dataset
+mv cifar-10-batches-py dataset/cifar-10
+
+# Clean up the tar file
+rm cifar-10-python.tar.gz
+```

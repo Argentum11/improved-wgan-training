@@ -5,3 +5,4 @@ push
 *.pkl
 *.jpg
 *.png
+dataset/cifar-10/

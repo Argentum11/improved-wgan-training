@@ -21,7 +21,7 @@ warnings.filterwarnings("ignore", category=UserWarning, module="torch_fidelity.d
 # Download CIFAR-10 (Python version) at
 # https://www.cs.toronto.edu/~kriz/cifar.html and fill in the path to the
 # extracted files here!
-DATA_DIR = ''
+DATA_DIR = 'dataset/cifar-10'
 if len(DATA_DIR) == 0:
     raise Exception('Please specify path to data directory in gan_cifar.py!')
 
