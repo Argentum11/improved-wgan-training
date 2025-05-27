@@ -3,7 +3,8 @@ import tempfile
 import numpy as np
 from torch_fidelity import calculate_metrics
 from PIL import Image
-
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="torch_fidelity.datasets")
 
 def get_inception_score_from_generator(generator_func, num_batches=10, batch_size=100):
     """

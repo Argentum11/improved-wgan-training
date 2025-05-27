@@ -12,10 +12,8 @@ import numpy as np
 import time
 import os
 import sys
+from PIL import Image
 sys.path.append(os.getcwd())
-
-import warnings
-warnings.filterwarnings("ignore", category=UserWarning, module="torch_fidelity.datasets")
 
 
 # Download CIFAR-10 (Python version) at
@@ -32,6 +30,7 @@ CRITIC_ITERS = 5  # How many critic iterations per generator iteration
 BATCH_SIZE = 64  # Batch size
 ITERS = 200000  # How many generator iterations to train for
 OUTPUT_DIM = 3072  # Number of pixels in CIFAR10 (3*32*32)
+SPLIT_TRAINING_AND_EVALUATION = True
 
 lib.print_model_settings(locals().copy())
 
@@ -230,6 +229,23 @@ def generate_image(frame, true_dist):
     samples = ((samples+1.)*(255./2)).numpy().astype('int32')
     lib.save_images.save_images(samples.reshape(
         (128, 3, 32, 32)), 'samples_{}.jpg'.format(frame))
+    
+def save_images_from_generator(generator_func, iteration:int, num_batches=10, batch_size=100):
+    temp_dir = os.path.join('temp', str(iteration))
+    os.makedirs(temp_dir, exist_ok=True)
+
+    # Generate and save images
+    for i in range(num_batches):
+        batch = generator_func(batch_size)
+        batch_np = batch.numpy()
+        batch_np = batch_np.reshape(-1, 3, 32, 32)
+        batch_np = ((batch_np + 1.0) * 127.5).clip(0, 255).astype(np.uint8)
+        batch_np = batch_np.transpose(0, 2, 3, 1)  # (N, H, W, C)
+        
+        # Save each image
+        for j, img_array in enumerate(batch_np):
+            img = Image.fromarray(img_array)
+            img.save(os.path.join(temp_dir, f'img_{i}_{j}.png'))
 
 
 # Dataset iterators
@@ -265,8 +281,11 @@ for iteration in range(ITERS):
 
     # Calculate inception score every 1K iters
     if iteration % 1000 == 999:
-        inception_score = get_inception_score_from_generator(Generator)
-        lib.plot.plot('inception score', inception_score)
+        if SPLIT_TRAINING_AND_EVALUATION:
+            save_images_from_generator(Generator, iteration)
+        else:
+            inception_score = get_inception_score_from_generator(Generator)
+            lib.plot.plot('inception score', inception_score)
 
     # Calculate dev loss and generate samples every 100 iters
     if iteration % 100 == 99:
