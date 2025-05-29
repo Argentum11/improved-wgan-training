@@ -31,6 +31,7 @@ BATCH_SIZE = 64  # Batch size
 ITERS = 200000  # How many generator iterations to train for
 OUTPUT_DIM = 3072  # Number of pixels in CIFAR10 (3*32*32)
 SPLIT_TRAINING_AND_EVALUATION = True
+NUM_GENERATED_IMAGES = 25
 
 lib.print_model_settings(locals().copy())
 
@@ -220,15 +221,15 @@ def clip_disc_weights():
         var.assign(tf.clip_by_value(var, -0.01, 0.01))
 
 # For generating samples
-fixed_noise_128 = tf.constant(
-    np.random.normal(size=(128, 128)).astype('float32'))
+fixed_noise = tf.constant(
+    np.random.normal(size=(NUM_GENERATED_IMAGES, 128)).astype('float32'))
 
 
 def generate_image(frame, true_dist):
-    samples = Generator(128, noise=fixed_noise_128)
+    samples = Generator(NUM_GENERATED_IMAGES, noise=fixed_noise)
     samples = ((samples+1.)*(255./2)).numpy().astype('int32')
     lib.save_images.save_images(samples.reshape(
-        (128, 3, 32, 32)), 'samples_{}.jpg'.format(frame))
+        (NUM_GENERATED_IMAGES, 3, 32, 32)), 'samples_{}.jpg'.format(frame))
     
 def save_images_from_generator(generator_func, iteration:int, num_batches=10, batch_size=100):
     temp_dir = os.path.join('temp', str(iteration))
