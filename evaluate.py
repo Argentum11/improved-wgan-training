@@ -56,12 +56,12 @@ for subdir in folder_path.rglob("*"):
     if subdir.is_dir():
         iteration = int(subdir.name)
         inception_score, fid = get_FID_for_directory(str(subdir))
-        print(
-            f"iteration: {iteration}\tinception score: {inception_score:.3f}\tFID: {fid:.3f}")
         results.append((iteration, inception_score, fid))
 
 # Sort by iteration
 results.sort(key=lambda x: x[0])
+for iteration, inception_score, fid in results:
+    print(f"iteration: {iteration}\tinception score: {inception_score:.3f}\tFID: {fid:.3f}")
 
 # Split values
 iterations = [r[0] for r in results]
